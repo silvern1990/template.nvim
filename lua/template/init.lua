@@ -18,6 +18,9 @@ function temp.get_temp_list()
 
   for _, name in ipairs(result) do
     local ft = vim.filetype.match({ filename = name })
+    if string.find(name, '%.xml') then
+      ft = 'xml'
+    end
     if ft == 'smarty' then
       local first_row = vim.fn.readfile(name, '', 1)[1]
       ft = vim.split(first_row, '%s')[2]
