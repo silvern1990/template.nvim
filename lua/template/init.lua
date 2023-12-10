@@ -81,6 +81,10 @@ local function expand_expr()
       if not line:match(expr[6]) then
         return line
       end
+
+      if temp.var then
+        return expand_recursively(line, expr[6], temp.var)
+      end
       local var = vim.fn.input('Variable name: ', '')
       return expand_recursively(line, expr[6], var)
     end,
@@ -140,6 +144,10 @@ local function parse_args(args)
   for _, v in pairs(args) do
     if v:find('%.%w+') then
       data.file = v
+    end
+    if v:find('var=') then
+      local _, e = v:find('var=')
+      temp.var = v:sub(e+1)
     end
     data.tp_name = v
   end
