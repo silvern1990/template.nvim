@@ -82,10 +82,12 @@ local function expand_expr()
         return line
       end
 
+      local var = ''
       if temp.var then
-        return expand_recursively(line, expr[6], temp.var)
+        var = temp.var
+      else
+        var = vim.fn.input('Variable name: ', '')
       end
-      local var = vim.fn.input('Variable name: ', '')
       return expand_recursively(line, expr[6], var)
     end,
     [expr[7]] = function(line)
@@ -220,6 +222,8 @@ function temp:generate_template(args)
           cursor_pos = { i, 2 }
         end
       end
+
+      temp.var = nil -- unset variable name used
 
       local cur_line = api.nvim_win_get_cursor(0)[1]
       local start = cur_line
